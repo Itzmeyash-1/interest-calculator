@@ -34,10 +34,21 @@ class DayModeSelector extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 10),
-          _SnapCheckbox(
-            label: '15 / 30 Days',
-            value: c.snap1530.value,          // ← was snap15Days
-            onChanged: c.toggleSnap1530,      // ← was toggleSnap15Days
+          // ── Both checkboxes in one row ──────────────────────────────
+          Row(
+            children: [
+              _SnapCheckbox(
+                label: '15 / 30 Days',
+                value: c.snap1530.value,
+                onChanged: c.toggleSnap1530,
+              ),
+              const SizedBox(width: 12),
+              _SnapCheckbox(
+                label: 'Compound Yearly',
+                value: c.compoundYearly.value,
+                onChanged: c.toggleCompoundYearly,
+              ),
+            ],
           ),
         ],
       );
@@ -138,46 +149,50 @@ class _SnapCheckbox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(                   // ← removed Expanded (not in a Row)
-      onTap: () => onChanged(!value),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-        decoration: BoxDecoration(
-          color: value ? AppColors.accentLight.withOpacity(0.5) : AppColors.surface,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-            color: value ? AppColors.skyBlue : AppColors.inputBorder,
-            width: 1.5,
+    return Expanded(
+      child: GestureDetector(
+        onTap: () => onChanged(!value),
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+          decoration: BoxDecoration(
+            color: value ? AppColors.accentLight.withOpacity(0.5) : AppColors.surface,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: value ? AppColors.skyBlue : AppColors.inputBorder,
+              width: 1.5,
+            ),
           ),
-        ),
-        child: Row(
-          children: [
-            AnimatedContainer(
-              duration: const Duration(milliseconds: 200),
-              width: 18, height: 18,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(4),
-                color: value ? AppColors.skyBlue : Colors.transparent,
-                border: Border.all(
-                  color: value ? AppColors.skyBlue : AppColors.inputBorder,
-                  width: 2,
+          child: Row(
+            children: [
+              AnimatedContainer(
+                duration: const Duration(milliseconds: 200),
+                width: 18, height: 18,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(4),
+                  color: value ? AppColors.skyBlue : Colors.transparent,
+                  border: Border.all(
+                    color: value ? AppColors.skyBlue : AppColors.inputBorder,
+                    width: 2,
+                  ),
+                ),
+                child: value
+                    ? const Icon(Icons.check, color: Colors.white, size: 12)
+                    : null,
+              ),
+              const SizedBox(width: 8),
+              Flexible(
+                child: Text(
+                  label,
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                    color: value ? AppColors.skyBlue : AppColors.textSecondary,
+                  ),
                 ),
               ),
-              child: value
-                  ? const Icon(Icons.check, color: Colors.white, size: 12)
-                  : null,
-            ),
-            const SizedBox(width: 8),
-            Text(
-              label,
-              style: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
-                color: value ? AppColors.skyBlue : AppColors.textSecondary,
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
